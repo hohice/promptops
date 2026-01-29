@@ -1,0 +1,28 @@
+project_name: promptops
+language: python
+target_dir: ./src
+database:
+  type: sqlite
+  path: promptops.db
+  schema_file: ./static/schema.sql
+
+modules:
+  - name: sdk.context_engine
+    spec: specs/context_engine.spec
+    skills:
+      - manage_templates
+      - run_ab_test
+
+  - name: sdk.smart_rewriter
+    spec: specs/smart_rewriter.spec
+    skills:
+      - generate_optimization
+      - collect_votes
+
+  - name: api.routes
+    depends_on: [sdk.context_engine, sdk.smart_rewriter]
+    generate: rest_api
+
+  - name: admin.views
+    depends_on: [sdk.context_engine, sdk.smart_rewriter]
+    generate: flask_admin_templates
