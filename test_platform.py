@@ -4,7 +4,7 @@ Test script for PromptOps platform
 
 from src.main import initialize_database
 from src.sdk.context_engine import ContextEngine, create_template, list_templates, optimize_templates
-from src.sdk.smart_rewriter import SmartRewriter, generate_optimization
+from src.sdk.smart_rewriter import SmartRewriter, generate_optimization, get_analytics
 
 def test_platform():
     print("Testing PromptOps Platform...")
@@ -44,6 +44,10 @@ def test_platform():
         performance_data={"previous_score": 0.7}
     )
     print(f"✓ Optimization generated: {optimization_result['improvement_score']}")
+    
+    # Test Smart Rewriter analytics
+    analytics = get_analytics()
+    print(f"✓ Analytics retrieved: {analytics['optimization_metrics']['total_optimizations']} total optimizations")
     
     print("\nAll tests passed! PromptOps platform is working correctly.")
 

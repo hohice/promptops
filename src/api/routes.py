@@ -5,7 +5,7 @@ REST API endpoints for the promptops platform
 
 from flask import Flask, request, jsonify
 from src.sdk.context_engine import ContextEngine, list_templates, create_template, get_template, update_template, delete_template, execute_ab_test, optimize_templates
-from src.sdk.smart_rewriter import SmartRewriter, generate_optimization, collect_votes
+from src.sdk.smart_rewriter import SmartRewriter, generate_optimization, collect_votes, get_analytics
 
 
 def create_app():
@@ -97,6 +97,12 @@ def create_app():
             comment=data.get('comment', '')
         )
         return jsonify(result)
+
+    @app.route('/analytics', methods=['GET'])
+    def get_analytics_data():
+        """Get optimization analytics and performance metrics"""
+        analytics = get_analytics()
+        return jsonify(analytics)
 
     return app
 
