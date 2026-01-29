@@ -5,6 +5,7 @@ Provides template management and A/B testing capabilities
 
 from src.skills.manage_templates import manage_templates
 from src.skills.run_ab_test import run_ab_test
+from src.skills.generate_optimization import generate_optimization as skill_generate_optimization
 
 
 class ContextEngine:
@@ -53,6 +54,29 @@ class ContextEngine:
         """Run an A/B test between two variants"""
         return run_ab_test(config, variant_a, variant_b)
 
+    def optimize_templates(self, template_ids=None, context=None):
+        """Optimize context templates"""
+        if template_ids is None:
+            # If no specific templates provided, optimize all active templates
+            all_templates = self.list_templates()
+            template_ids = [tmpl['id'] for tmpl in all_templates if tmpl['is_active']]
+        
+        optimization_results = []
+        for template_id in template_ids:
+            template = self.get_template(template_id)
+            if template:
+                # Use the template content for optimization
+                result = skill_generate_optimization(
+                    original_prompt=template['content'],
+                    context=context
+                )
+                optimization_results.append({
+                    'template_id': template_id,
+                    'optimization_result': result
+                })
+        
+        return optimization_results
+
 
 # Convenience functions
 def create_template(name, description, content):
@@ -83,3 +107,8 @@ def list_templates():
 def execute_ab_test(config, variant_a, variant_b):
     engine = ContextEngine()
     return engine.run_ab_test(config, variant_a, variant_b)
+
+
+def optimize_templates(template_ids=None, context=None):
+    engine = ContextEngine()
+    return engine.optimize_templates(template_ids, context)

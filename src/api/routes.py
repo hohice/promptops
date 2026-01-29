@@ -4,7 +4,7 @@ REST API endpoints for the promptops platform
 """
 
 from flask import Flask, request, jsonify
-from src.sdk.context_engine import ContextEngine, list_templates, create_template, get_template, update_template, delete_template, execute_ab_test
+from src.sdk.context_engine import ContextEngine, list_templates, create_template, get_template, update_template, delete_template, execute_ab_test, optimize_templates
 from src.sdk.smart_rewriter import SmartRewriter, generate_optimization, collect_votes
 
 
@@ -75,6 +75,15 @@ def create_app():
             context=data.get('context'),
             performance_data=data.get('performance_data')
         )
+        return jsonify(result)
+
+    @app.route('/optimize-context', methods=['POST'])
+    def optimize_context_processing():
+        """Optimize context processing"""
+        data = request.json
+        template_ids = data.get('template_ids')
+        context = data.get('context')
+        result = optimize_templates(template_ids=template_ids, context=context)
         return jsonify(result)
 
     @app.route('/votes', methods=['POST'])

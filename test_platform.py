@@ -3,7 +3,7 @@ Test script for PromptOps platform
 """
 
 from src.main import initialize_database
-from src.sdk.context_engine import ContextEngine, create_template, list_templates
+from src.sdk.context_engine import ContextEngine, create_template, list_templates, optimize_templates
 from src.sdk.smart_rewriter import SmartRewriter, generate_optimization
 
 def test_platform():
@@ -28,6 +28,10 @@ def test_platform():
     # List templates
     templates = list_templates()
     print(f"✓ Templates listed: {len(templates)} found")
+    
+    # Test Context Engine optimization
+    optimization_results = optimize_templates(context={"purpose": "testing"})
+    print(f"✓ Context template optimization: {len(optimization_results)} templates optimized")
     
     # Test Smart Rewriter
     smart_rewriter = SmartRewriter()
